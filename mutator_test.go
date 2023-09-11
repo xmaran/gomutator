@@ -8,13 +8,13 @@ import (
 
 func TestMutator(t *testing.T) {
 
-	type CirclularCredentials struct {
-		Head     *CirclularCredentials
+	type CircularCredentials struct {
+		Head     *CircularCredentials
 		Username string
 		Password string
 	}
 
-	cc := CirclularCredentials{}
+	cc := CircularCredentials{}
 	// test shouldn't crash as the mutator should be loop safe
 	cc.Head = &cc
 	cc.Username = "admin"

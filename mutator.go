@@ -1,7 +1,6 @@
-// package gomutator provides a callback to the mutate hook function to mutate
-// the value of the struct field or map key. This package would only work on
-// addressable values. For struct types, it would work only on exposed struct
-// fields
+// package gomutator provides functionality to modify the value of struct
+// fields or map keys based on the matched key using the contract method.
+// This package would only work on addressable values.
 package gomutator
 
 import (
@@ -83,7 +82,7 @@ func (mc *MutatorChain) Add(key any, mh MutateHook) *MutatorChain {
 	return mc
 }
 
-func (mc *MutatorChain) Remove(key string) *MutatorChain {
+func (mc *MutatorChain) Remove(key any) *MutatorChain {
 	mc.lock.Lock()
 	defer mc.lock.Unlock()
 
@@ -99,7 +98,12 @@ func (m *Mutate) MatchType() MutateType {
 	return m.matchType
 }
 
-// Execute execute the mutate hook function against the matched struct field name or map key
+// Execute For each field in the struct or map, visit them one by one and check
+// if their name matches the input hook key. If there is a match, call the
+// Mutate method of the hook contract. It is important to note that this
+// Execute method can only be used on the addressable value of the struct
+// and map. Additionally, it can only be used on fields that have been
+// explicitly exposed within the struct.
 func (m *Mutate) Execute(data any) {
 
 	// To prevent pointer loops while visiting addresses, a new set needs to
